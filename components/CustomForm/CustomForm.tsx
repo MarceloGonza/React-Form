@@ -1,25 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 import { InputForm } from "./components/CustomInput";
-
-const schema = z
-  .object({
-    name: z.string().min(1, "El nombre es obligatorio"),
-    email: z.string().email("Email inválido").min(1, "El Email es oblogatorio"),
-    password: z
-      .string()
-      .min(5, "La contraseña debe tener al menos 6 caracteres"),
-    confirmPassword: z
-      .string()
-      .min(6, "La confirmación debe tener al menos 6 caracteres"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas son inválidas",
-    path: ["confirmPassword"],
-  });
-
-type FormValues = z.infer<typeof schema>;
+import { FormValues, schema } from "./components/models";
 
 const CustomForm = () => {
   const {
