@@ -45,7 +45,8 @@ export const schema = z.object({
 
 export type FormValues = z.infer<typeof schema>;
 
-## 🚀 Cómo usarlo
+
+🚀Cómo usarlo
 
 Instala las dependencias necesarias:
 
