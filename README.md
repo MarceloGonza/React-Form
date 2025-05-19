@@ -1,54 +1,53 @@
-# React + TypeScript + Vite
+# CustomForm - React Hook Form + Zod + Custom Input
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto implementa un formulario personalizado en React utilizando **React Hook Form** para el manejo de formularios y **Zod** como esquema de validación. Los inputs están encapsulados en un componente reutilizable llamado `InputForm`.
 
-Currently, two official plugins are available:
+## 📦 Tecnologías utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [React Hook Form](https://react-hook-form.com/)
+- [Zod](https://zod.dev/)
+- [@hookform/resolvers](https://react-hook-form.com/docs/useform/#resolver)
+- TypeScript
 
-## Expanding the ESLint configuration
+## 🧩 Estructura del formulario
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+El formulario incluye los siguientes campos:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Name**
+- **Email**
+- **Password**
+- **Confirm Password**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Cada campo utiliza el componente `InputForm` que recibe las siguientes props:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `name`: nombre del campo
+- `control`: controlador de React Hook Form
+- `label`: etiqueta del input
+- `type`: tipo de input (`text`, `email`, `password`, etc.)
+- `error`: error de validación proporcionado por React Hook Form
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## 🧪 Validación
+
+La validación del formulario se realiza utilizando **Zod** a través del `zodResolver`. El esquema se define en el archivo `models.ts` y se importa al componente principal.
+
+```ts
+import { z } from "zod";
+
+export const schema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+export type FormValues = z.infer<typeof schema>;
+
+## 🚀 Cómo usarlo
+
+Instala las dependencias necesarias:
+
+npm install react-hook-form zod @hookform/resolvers
 ```
